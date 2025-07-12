@@ -21,6 +21,7 @@ def count_colors(filename, verbose=False):
     blue_count = 0
     red_count = 0
     green_count = 0
+    lemon_count = 0
     result = ""
     
     with open(filename, 'r') as file:
@@ -41,6 +42,11 @@ def count_colors(filename, verbose=False):
                 result += f'{back_text} - {get_date_components(yellow_count)}\n'
                 if verbose:
                     print(f"Found Yellow: 52 chars back='{back_text}', forward='{forward_text}'")
+            elif forward_text.startswith('Lemon'):
+                lemon_count += 1
+                result += f'{back_text} - {get_date_components(lemon_count)}\n'
+                if verbose:
+                    print(f"Found Lemon: 52 chars back='{back_text}', forward='{forward_text}'")
             elif forward_text.startswith('Blue'):
                 blue_count += 1
                 custom_text = content[start_pos + const_color_len + 8:start_pos + 100].split(' |D:')[0]
@@ -61,6 +67,7 @@ def count_colors(filename, verbose=False):
     if verbose:
         print("\nCounts:")
         print(f"Yellow: {yellow_count}")
+        print(f"Lemon: {lemon_count}")
         print(f"Blue: {blue_count}")
         print(f"Red: {red_count}")
         print(f"Green: {green_count}")
