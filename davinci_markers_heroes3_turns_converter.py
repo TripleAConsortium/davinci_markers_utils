@@ -16,12 +16,12 @@ def get_date_components(days):
     
     return f'{month}{week}{day}'
 
-def count_colors(filename, verbose=False):
-    yellow_count = 0
+def count_colors(filename, verbose=False, initial_yellow=0, initial_lemon=0):
+    yellow_count = initial_yellow
     blue_count = 0
     red_count = 0
     green_count = 0
-    lemon_count = 0
+    lemon_count = initial_lemon
     result = ""
     
     with open(filename, 'r') as file:
@@ -66,8 +66,8 @@ def count_colors(filename, verbose=False):
     
     if verbose:
         print("\nCounts:")
-        print(f"Yellow: {yellow_count}")
-        print(f"Lemon: {lemon_count}")
+        print(f"Yellow: {yellow_count} (initial: {initial_yellow})")
+        print(f"Lemon: {lemon_count} (initial: {initial_lemon})")
         print(f"Blue: {blue_count}")
         print(f"Red: {red_count}")
         print(f"Green: {green_count}")
@@ -76,12 +76,35 @@ def count_colors(filename, verbose=False):
     print(result)
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2 or len(sys.argv) > 3:
-        print("Usage: python script.py <filename> [--verbose]")
+    if len(sys.argv) < 2:
+        print("Usage: python script.py <filename> [--verbose] [--yellow N] [--lemon M]")
         sys.exit(1)
     
     verbose = False
-    if len(sys.argv) == 3 and sys.argv[2] == '--verbose':
-        verbose = True
+    initial_yellow = 0
+    initial_lemon = 0
     
-    count_colors(sys.argv[1], verbose)
+    i = 2
+    while i < len(sys.argv):
+        if sys.argv[i] == '--verbose':
+            verbose = True
+            i += 1
+        elif sys.argv[i] == '--yellow' and i + 1 < len(sys.argv):
+            try:
+                initial_yellow = int(sys.argv[i+1])
+                i += 2
+            except ValueError:
+                print("Error: --yellow requires an integer value")
+                sys.exit(1)
+        elif sys.argv[i] == '--lemon' and i + 1 < len(sys.argv):
+            try:
+                initial_lemon = int(sys.argv[i+1])
+                i += 2
+            except ValueError:
+                print("Error: --lemon requires an integer value")
+                sys.exit(1)
+        else:
+            print(f"Error: Unknown argument {sys.argv[i]}")
+            sys.exit(1)
+    
+    count_colors(sys.argv[1], verbose, initial_yellow, initial_lemon)
