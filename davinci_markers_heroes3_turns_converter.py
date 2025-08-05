@@ -16,12 +16,16 @@ def get_date_components(days):
     
     return f'{month}{week}{day}'
 
-def count_colors(filename, verbose=False, initial_yellow=0, initial_lemon=0):
+def count_colors(filename, verbose=False, initial_yellow=0, initial_lemon=0, initial_sand=0, initial_cocoa=0):
     yellow_count = initial_yellow
     blue_count = 0
     red_count = 0
     green_count = 0
+    fuchsia_count = 0
+    mint_count = 0
     lemon_count = initial_lemon
+    sand_count = initial_sand
+    cocoa_count = initial_cocoa
     result = ""
     
     with open(filename, 'r') as file:
@@ -47,6 +51,16 @@ def count_colors(filename, verbose=False, initial_yellow=0, initial_lemon=0):
                 result += f'{back_text} - {get_date_components(lemon_count)}\n'
                 if verbose:
                     print(f"Found Lemon: 52 chars back='{back_text}', forward='{forward_text}'")
+            elif forward_text.startswith('Sand'):
+                sand_count += 1
+                result += f'{back_text} - {get_date_components(sand_count)}\n'
+                if verbose:
+                    print(f"Found Sand: 52 chars back='{back_text}', forward='{forward_text}'")
+            elif forward_text.startswith('Cocoa'):
+                cocoa_count += 1
+                result += f'{back_text} - {get_date_components(cocoa_count)}\n'
+                if verbose:
+                    print(f"Found Cocoa: 52 chars back='{back_text}', forward='{forward_text}'")
             elif forward_text.startswith('Blue'):
                 blue_count += 1
                 custom_text = content[start_pos + const_color_len + 8:start_pos + 100].split(' |D:')[0]
@@ -63,26 +77,42 @@ def count_colors(filename, verbose=False, initial_yellow=0, initial_lemon=0):
                 result += f'{back_text} - Звук вернулся\n'
                 if verbose:
                     print(f"Found Green: 52 chars back='{back_text}', forward='{forward_text}'")
+            elif forward_text.startswith('Fuchsi'):
+                fuchsia_count += 1
+                result += f'{back_text} - Финалочка\n'
+                if verbose:
+                    print(f"Found Fuchsia: 52 chars back='{back_text}', forward='{forward_text}'")
+            elif forward_text.startswith('Mint'):
+                mint_count += 1
+                result += f'{back_text} - Микрофончик\n'
+                if verbose:
+                    print(f"Found Mint: 52 chars back='{back_text}', forward='{forward_text}'")
     
     if verbose:
         print("\nCounts:")
         print(f"Yellow: {yellow_count} (initial: {initial_yellow})")
         print(f"Lemon: {lemon_count} (initial: {initial_lemon})")
+        print(f"Sand: {sand_count} (initial: {initial_sand})")
+        print(f"Cocoa: {cocoa_count} (initial: {initial_cocoa})")
         print(f"Blue: {blue_count}")
         print(f"Red: {red_count}")
         print(f"Green: {green_count}")
+        print(f"Fuchsia: {fuchsia_count}")
+        print(f"Mint: {mint_count}")
         print("\nResult:")
 
     print(result)
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python script.py <filename> [--verbose] [--yellow N] [--lemon M]")
+        print("Usage: python script.py <filename> [--verbose] [--yellow N] [--lemon M] [--sand S] [--cocoa C]")
         sys.exit(1)
     
     verbose = False
     initial_yellow = 0
     initial_lemon = 0
+    initial_sand = 0
+    initial_cocoa = 0
     
     i = 2
     while i < len(sys.argv):
@@ -103,8 +133,22 @@ if __name__ == "__main__":
             except ValueError:
                 print("Error: --lemon requires an integer value")
                 sys.exit(1)
+        elif sys.argv[i] == '--sand' and i + 1 < len(sys.argv):
+            try:
+                initial_sand = int(sys.argv[i+1])
+                i += 2
+            except ValueError:
+                print("Error: --sand requires an integer value")
+                sys.exit(1)
+        elif sys.argv[i] == '--cocoa' and i + 1 < len(sys.argv):
+            try:
+                initial_cocoa = int(sys.argv[i+1])
+                i += 2
+            except ValueError:
+                print("Error: --cocoa requires an integer value")
+                sys.exit(1)
         else:
             print(f"Error: Unknown argument {sys.argv[i]}")
             sys.exit(1)
     
-    count_colors(sys.argv[1], verbose, initial_yellow, initial_lemon)
+    count_colors(sys.argv[1], verbose, initial_yellow, initial_lemon, initial_sand, initial_cocoa)
